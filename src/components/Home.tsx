@@ -3,15 +3,22 @@ import './Home.css';
 
 import defaultProfilePicture from '../assets/defaultProfilePicture.png';
 import axios from 'axios';
+import { Digital } from 'react-activity';
+import  'react-activity/dist/Digital.css';
 
 const Home = () => {
  const [searchText,setSearchText]=useState<string>('');
  const [data,setData]=useState<any>([])
+ const[loading,setLoading]=useState<boolean>(false);
 useEffect(()=>{
   const fetchData= async()=>{
+    setLoading(true);
     const res = await axios.get('https://students-list-backend.onrender.com/all');
   setData(res.data.student);
+  setLoading(false);
+
   }
+
 fetchData();
 },[]);   
 
@@ -27,7 +34,7 @@ student.name.toLowerCase().includes(searchText.toLowerCase())
     <div className='sr'>
       <input className='search' value={searchText} onChange={(e)=>{setSearchText(e.target.value)}} type="text" />
     </div>
-    <div className='main'>
+   {!loading ? <div className='main'>
     
       {searchData.map((student:any, index:any) => (
         
@@ -49,7 +56,7 @@ student.name.toLowerCase().includes(searchText.toLowerCase())
           
         </div>
       ))}
-    </div>
+    </div>:<Digital color="#727981" size={32} speed={1} animating={true} />}
     </>
   );
 };
