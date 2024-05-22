@@ -9,7 +9,7 @@ const Home = () => {
  const [data,setData]=useState<any>([])
 useEffect(()=>{
   const fetchData= async()=>{
-    const res = await axios.get('http://localhost:3000/all');
+    const res = await axios.get('https://students-list-backend.onrender.com/all');
   setData(res.data.student);
   }
 fetchData();
