@@ -1,7 +1,7 @@
 import  { useEffect, useState } from 'react';
 import './Home.css';
 
-import defaultProfilePicture from 'C:/Users/kumar/Contacts/Desktop/defaultProfilePicture.png';
+import defaultProfilePicture from '../assets/defaultProfilePicture.png';
 import axios from 'axios';
 
 const Home = () => {
