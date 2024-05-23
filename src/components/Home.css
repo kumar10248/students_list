@@ -67,6 +67,30 @@
     margin-bottom: 20px;
     
   }
+.but{
+  width: 120px;
+  height: 37px;
+  font-size: 18px;
+  font-weight: 500;
+  color:whitesmoke;
+  background-color: black;
+
+}
+
+.export-btn {
+  margin: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.export-btn:hover {
+  background-color: #0056b3;
+}
+
 
   @media screen and (max-width: 768px){
     .stcard{
