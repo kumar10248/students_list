@@ -42,7 +42,8 @@ const Home = () => {
   const handleSearch = () => {
     const filtered = data.filter((student: any) =>
       (student.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      student.uid.toLowerCase().includes(searchText.toLowerCase())) &&
+        student.uid.toLowerCase().includes(searchText.toLowerCase()) ||
+        student.section.toLowerCase().includes(searchText.toLowerCase())) &&
       student.section.toLowerCase().includes(sectionText.toLowerCase()) &&
       student.group.toLowerCase().includes(groupText.toLowerCase())
     );
@@ -73,7 +74,7 @@ const Home = () => {
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           type='text'
-          placeholder='Search by name or UID'
+          placeholder='Search by name, UID, or section'
         />
         <input
           className='search'
