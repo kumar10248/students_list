@@ -8,8 +8,11 @@ import * as XLSX from 'xlsx';
 
 const Home = () => {
   const [searchText, setSearchText] = useState<string>('');
+  const [sectionText, setSectionText] = useState<string>('');
+  const [groupText, setGroupText] = useState<string>('');
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [filteredData, setFilteredData] = useState<any>([]);
   const [attendance, setAttendance] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
@@ -17,6 +20,7 @@ const Home = () => {
       setLoading(true);
       const res = await axios.get('https://students-list-backend.onrender.com/all');
       setData(res.data.student);
+      setFilteredData(res.data.student);
       const initialAttendance = res.data.student.reduce((acc: any, student: any) => {
         acc[student.uid] = true; // All students marked as present initially
         return acc;
@@ -35,8 +39,18 @@ const Home = () => {
     }));
   };
 
+  const handleSearch = () => {
+    const filtered = data.filter((student: any) =>
+      (student.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      student.uid.toLowerCase().includes(searchText.toLowerCase())) &&
+      student.section.toLowerCase().includes(sectionText.toLowerCase()) &&
+      student.group.toLowerCase().includes(groupText.toLowerCase())
+    );
+    setFilteredData(filtered);
+  };
+
   const exportToExcel = () => {
-    const attendanceData = searchData.map((student: any) => ({
+    const attendanceData = filteredData.map((student: any) => ({
       UID: student.uid,
       Name: student.name,
       Section: student.section,
@@ -51,21 +65,36 @@ const Home = () => {
     XLSX.writeFile(workbook, 'Attendance.xlsx');
   };
 
-  const searchData = data.filter((student: any) =>
-    student.name.toLowerCase().includes(searchText.toLowerCase()) ||
-    student.section.toLowerCase().includes(searchText.toLowerCase()) ||
-    student.uid.toLowerCase().includes(searchText.toLowerCase())
-  );
-
   return (
     <>
-      <div className='sr'>
-        <input className='search' value={searchText} onChange={(e) => { setSearchText(e.target.value) }} type="text" placeholder="Search by name, section, or UID" />
+      <div className='search-container'>
+        <input
+          className='search'
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          type='text'
+          placeholder='Search by name or UID'
+        />
+        <input
+          className='search'
+          value={sectionText}
+          onChange={(e) => setSectionText(e.target.value)}
+          type='text'
+          placeholder='Filter by section'
+        />
+        <input
+          className='search'
+          value={groupText}
+          onChange={(e) => setGroupText(e.target.value)}
+          type='text'
+          placeholder='Filter by group'
+        />
+        <button onClick={handleSearch} className='search-btn'>Search</button>
       </div>
-      <button onClick={exportToExcel} className="export-btn">Export to Excel</button>
+      <button onClick={exportToExcel} className='export-btn'>Export to Excel</button>
       {!loading ? (
         <div className='main'>
-          {searchData.map((student: any, index: any) => (
+          {filteredData.map((student: any, index: any) => (
             <div className='stcard' key={index}>
               <img
                 src={defaultProfilePicture}
@@ -79,7 +108,7 @@ const Home = () => {
               <div>Batch: {student.batch}</div>
               <div>
                 <button
-                  className="but"
+                  className='but'
                   onClick={() => handleAttendance(student.uid)}
                   style={{ backgroundColor: attendance[student.uid] ? '#28a745' : '#dc3545' }}
                 >
@@ -90,7 +119,7 @@ const Home = () => {
           ))}
         </div>
       ) : (
-        <Digital color="#28a745" size={32} speed={1} animating={true} />
+        <Digital color='#28a745' size={32} speed={1} animating={true} />
       )}
     </>
   );
