@@ -56,7 +56,7 @@ student.name.toLowerCase().includes(searchText.toLowerCase())
           
         </div>
       ))}
-    </div>:<Digital color="#727981" size={32} speed={1} animating={true} />}
+    </div>:<Digital color="#28a745" size={32} speed={1} animating={true} />}
     </>
   );
 };
