@@ -85,6 +85,7 @@
   margin-top: 20px;
   margin-bottom: 20px;
   border-radius: 20px;
+  flex-direction: column;
 }
 
 .search {
@@ -106,6 +107,7 @@
   justify-content: center;
   border-radius: 20px;
   cursor: pointer;
+  flex-direction: column;
 }
 
 .search-btn:hover {
