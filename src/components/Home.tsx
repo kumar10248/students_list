@@ -68,6 +68,13 @@ const Home = () => {
 
   return (
     <>
+    <div className='home'>
+     <header>
+        <h1>Efficient Attendance Marking Solution</h1>
+        <h2>for Chandigarh University's 3rd General CSE Program</h2>
+    </header>
+    </div>
+     
       <div className='search-container'>
         <input
           className='search'
