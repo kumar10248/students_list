@@ -45,12 +45,16 @@
   color: whitesmoke;
   background-color: black;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 2px;
+  border: none;
+}
+.but:hover {
+  opacity: 0.8 ;
 }
 .search {
   width: 80%;
   height: 50px;
-  border-radius: 20px;
+  border-radius: 25px;
   font-size: 22px;
   padding: 0 10px;
   font-weight: bold;
@@ -62,14 +66,7 @@
   margin-top: 20px;
   margin-bottom: 20px;
 }
-.but {
-  width: 120px;
-  height: 37px;
-  font-size: 18px;
-  font-weight: 500;
-  color: whitesmoke;
-  background-color: black;
-}
+
 
 .search-container {
   display: flex;
@@ -95,11 +92,13 @@
   background-color: #28a745;
   color: white;
   border: none;
+  font-weight: 600;
+  font-size: 18px;
   display: flex;
   margin-top: 10px;
   align-items: center;
   justify-content: center;
-  border-radius: 20px;
+  border-radius: 25px;
   cursor: pointer;
   flex-direction: column;
 }
