@@ -106,7 +106,9 @@
 .search-btn:hover {
   background-color: #218838;
 }
-
+.search-btn:active{
+  opacity: 0.7;
+}
 .export-btn {
   margin: 20px;
   padding: 10px 20px;
