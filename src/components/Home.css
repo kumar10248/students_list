@@ -125,6 +125,11 @@
   background-color: #0056b3;
 }
 
+.hidden {
+  display: none;
+}
+
+
 @media screen and (max-width: 768px) {
   .stcard {
     width: 80vw;

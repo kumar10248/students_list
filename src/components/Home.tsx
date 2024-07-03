@@ -14,6 +14,7 @@ const Home = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [filteredData, setFilteredData] = useState<any>([]);
   const [attendance, setAttendance] = useState<{ [key: string]: boolean }>({});
+  const [hasSearched, setHasSearched] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,7 +23,6 @@ const Home = () => {
         "https://students-list-backend.onrender.com/all"
       );
       setData(res.data.student);
-      setFilteredData(res.data.student);
       const initialAttendance = res.data.student.reduce(
         (acc: any, student: any) => {
           acc[student.uid] = true; // All students marked as present initially
@@ -54,6 +54,7 @@ const Home = () => {
         student.group.toLowerCase().includes(groupText.toLowerCase())
     );
     setFilteredData(filtered);
+    setHasSearched(true);
   };
 
   const exportToExcel = () => {
@@ -111,34 +112,38 @@ const Home = () => {
         Export to Excel
       </button>
       {!loading ? (
-        <div className="main">
-          {filteredData.map((student: any, index: any) => (
-            <div className="stcard" key={index}>
-              <img
-                src={defaultProfilePicture}
-                alt={`${student.name}'s profile`}
-                className="profile-picture"
-              />
-              <div className="name">{student.name}</div>
-              <div>UID: {student.uid}</div>
-              <div>Section: {student.section}</div>
-              <div>Group: {student.group}</div>
-              <div>Batch: {student.batch}</div>
-              <div>
-                <button
-                  className="but"
-                  onClick={() => handleAttendance(student.uid)}
-                  style={{
-                    backgroundColor: attendance[student.uid]
-                      ? "#28a745"
-                      : "#dc3545",
-                  }}
-                >
-                  {attendance[student.uid] ? "Present" : "Absent"}
-                </button>
+        <div className={`main ${!hasSearched ? "hidden" : ""}`}>
+          {filteredData.length > 0 ? (
+            filteredData.map((student: any, index: any) => (
+              <div className="stcard" key={index}>
+                <img
+                  src={defaultProfilePicture}
+                  alt={`${student.name}'s profile`}
+                  className="profile-picture"
+                />
+                <div className="name">{student.name}</div>
+                <div>UID: {student.uid}</div>
+                <div>Section: {student.section}</div>
+                <div>Group: {student.group}</div>
+                <div>Batch: {student.batch}</div>
+                <div>
+                  <button
+                    className="but"
+                    onClick={() => handleAttendance(student.uid)}
+                    style={{
+                      backgroundColor: attendance[student.uid]
+                        ? "#28a745"
+                        : "#dc3545",
+                    }}
+                  >
+                    {attendance[student.uid] ? "Present" : "Absent"}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            hasSearched && <div>No students found</div>
+          )}
         </div>
       ) : (
         <Digital color="#28a745" size={32} speed={1} animating={true} />
