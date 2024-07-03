@@ -16,26 +16,17 @@ const Home = () => {
   const [attendance, setAttendance] = useState<{ [key: string]: boolean }>({});
   const [hasSearched, setHasSearched] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const res = await axios.get(
-        "https://students-list-backend.onrender.com/all"
-      );
-      setData(res.data.student);
-      const initialAttendance = res.data.student.reduce(
-        (acc: any, student: any) => {
-          acc[student.uid] = true; // All students marked as present initially
-          return acc;
-        },
-        {}
-      );
-      setAttendance(initialAttendance);
-      setLoading(false);
-    };
-
-    fetchData();
-  }, []);
+  const fetchData = async () => {
+    setLoading(true);
+    const res = await axios.get("https://students-list-backend.onrender.com/all");
+    setData(res.data.student);
+    const initialAttendance = res.data.student.reduce((acc: any, student: any) => {
+      acc[student.uid] = true; // All students marked as present initially
+      return acc;
+    }, {});
+    setAttendance(initialAttendance);
+    setLoading(false);
+  };
 
   const handleAttendance = (uid: string) => {
     setAttendance((prevAttendance) => ({
@@ -45,16 +36,18 @@ const Home = () => {
   };
 
   const handleSearch = () => {
-    const filtered = data.filter(
-      (student: any) =>
-        (student.name.toLowerCase().includes(searchText.toLowerCase()) ||
-          student.uid.toLowerCase().includes(searchText.toLowerCase()) ||
-          student.section.toLowerCase().includes(searchText.toLowerCase())) &&
-        student.section.toLowerCase().includes(sectionText.toLowerCase()) &&
-        student.group.toLowerCase().includes(groupText.toLowerCase())
-    );
-    setFilteredData(filtered);
     setHasSearched(true);
+    fetchData().then(() => {
+      const filtered = data.filter(
+        (student: any) =>
+          (student.name.toLowerCase().includes(searchText.toLowerCase()) ||
+            student.uid.toLowerCase().includes(searchText.toLowerCase()) ||
+            student.section.toLowerCase().includes(searchText.toLowerCase())) &&
+          student.section.toLowerCase().includes(sectionText.toLowerCase()) &&
+          student.group.toLowerCase().includes(groupText.toLowerCase())
+      );
+      setFilteredData(filtered);
+    });
   };
 
   const exportToExcel = () => {
@@ -111,42 +104,44 @@ const Home = () => {
       <button onClick={exportToExcel} className="export-btn">
         Export to Excel
       </button>
-      {!loading ? (
-        <div className={`main ${!hasSearched ? "hidden" : ""}`}>
-          {filteredData.length > 0 ? (
-            filteredData.map((student: any, index: any) => (
-              <div className="stcard" key={index}>
-                <img
-                  src={defaultProfilePicture}
-                  alt={`${student.name}'s profile`}
-                  className="profile-picture"
-                />
-                <div className="name">{student.name}</div>
-                <div>UID: {student.uid}</div>
-                <div>Section: {student.section}</div>
-                <div>Group: {student.group}</div>
-                <div>Batch: {student.batch}</div>
-                <div>
-                  <button
-                    className="but"
-                    onClick={() => handleAttendance(student.uid)}
-                    style={{
-                      backgroundColor: attendance[student.uid]
-                        ? "#28a745"
-                        : "#dc3545",
-                    }}
-                  >
-                    {attendance[student.uid] ? "Present" : "Absent"}
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            hasSearched && <div>No students found</div>
-          )}
-        </div>
-      ) : (
+      {loading ? (
         <Digital color="#28a745" size={32} speed={1} animating={true} />
+      ) : (
+        hasSearched && (
+          <div className={`main ${!hasSearched ? "hidden" : ""}`}>
+            {filteredData.length > 0 ? (
+              filteredData.map((student: any, index: any) => (
+                <div className="stcard" key={index}>
+                  <img
+                    src={defaultProfilePicture}
+                    alt={`${student.name}'s profile`}
+                    className="profile-picture"
+                  />
+                  <div className="name">{student.name}</div>
+                  <div>UID: {student.uid}</div>
+                  <div>Section: {student.section}</div>
+                  <div>Group: {student.group}</div>
+                  <div>Batch: {student.batch}</div>
+                  <div>
+                    <button
+                      className="but"
+                      onClick={() => handleAttendance(student.uid)}
+                      style={{
+                        backgroundColor: attendance[student.uid]
+                          ? "#28a745"
+                          : "#dc3545",
+                      }}
+                    >
+                      {attendance[student.uid] ? "Present" : "Absent"}
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div>No students found</div>
+            )}
+          </div>
+        )
       )}
     </>
   );
